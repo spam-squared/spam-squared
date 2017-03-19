@@ -2,6 +2,7 @@ from decision_tree.mail_parser import MailParser
 from sklearn import tree
 from random import shuffle
 import math
+from random import randint
 from functools import reduce
 
 
@@ -15,7 +16,7 @@ class DecisionTree(object):
     def train_tree(self, mails):
         if len(mails) == 0:
             self.empty = True
-            return 2
+            return randint(0, 7)
 
         self.empty = False
 

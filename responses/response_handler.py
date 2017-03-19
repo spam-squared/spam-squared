@@ -1,4 +1,5 @@
 import json
+from random import randint
 
 
 class ResponseHandler(object):
@@ -13,3 +14,6 @@ class ResponseHandler(object):
     def get_responses(self):
         """Get responses from response pool"""
         return self.responses # Get with responses["responses"][index]["text"]
+
+    def get_random_index(self):
+        return randint(0, len(self.responses))
