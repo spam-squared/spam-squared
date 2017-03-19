@@ -22,7 +22,7 @@ class MailService(object):
 
             if data != -1:
                 for func in self.receivers:
-                    func(data['body'])
+                    func(data)
 
             sleep(10)
             check_mail_loop(self)

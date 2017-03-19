@@ -27,7 +27,7 @@ restored = tensorflow.restore()
 
 # Set up mail service
 mail_service = MailService()
-mail_service.add_receiver(lambda data: decision_tree.predict(data))
+mail_service.add_receiver(lambda data: decision_tree.predict(data['body']))
 mail_service.add_receiver(lambda data: update_decision_tree_model(data))
 
 
@@ -39,6 +39,12 @@ mail_service.add_receiver(lambda data: update_decision_tree_model(data))
 # else:
 #     tensorflow = Tensorflow()
 #     restored = tensorflow.restore()
+
+
+# ----------------------------------------------------------------------
+# Data Model
+# ----------------------------------------------------------------------
+
 
 # ----------------------------------------------------------------------
 # Decision tree
