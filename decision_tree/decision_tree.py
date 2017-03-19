@@ -14,7 +14,7 @@ class DecisionTree(object):
     TRAIN_DATA_PERCENTAGE = 0.7
 
     def train_tree(self, mails):
-        if len(mails) <= 10:
+        if len(mails) <= 100:
             self.empty = True
             return randint(0, 7)
 
@@ -46,7 +46,7 @@ class DecisionTree(object):
 
     def test(self):
         if self.empty:
-            print("Test Accuracy: No data")
+            print("Test Accuracy: Not enough data")
             return -1
 
         """Calculates test accuracy of current tree"""
