@@ -16,15 +16,46 @@ training_data_handler = TrainingDataHandler()
 training_data_handler.init_db()
 training_data_handler.load_db()
 
-if (not args.tensorflow):
-    # Set up decision tree
-    decision_tree = DecisionTree()
-    decision_tree.train_tree(training_data_handler.get_training_data())
-    decision_tree.test()
-else:
-    tensorflow = Tensorflow()
-    restored = tensorflow.restore()
+# Set up decision tree
+decision_tree = DecisionTree()
+decision_tree.train_tree(training_data_handler.get_training_data())
+decision_tree.test()
+
+# Set up tensor flow
+tensorflow = Tensorflow()
+restored = tensorflow.restore()
+
+# Set up mail service
+mail_service = MailService()
+mail_service.add_receiver(lambda data: decision_tree.predict(data))
+mail_service.add_receiver(lambda data: update_decision_tree_model(data))
 
 
-# Set up email service
-mailService = MailService()
+# if (not args.tensorflow):
+#     # Set up decision tree
+#     decision_tree = DecisionTree()
+#     decision_tree.train_tree(training_data_handler.get_training_data())
+#     decision_tree.test()
+# else:
+#     tensorflow = Tensorflow()
+#     restored = tensorflow.restore()
+
+# ----------------------------------------------------------------------
+# Decision tree
+# ----------------------------------------------------------------------
+
+def update_decision_tree_model(mail):
+    # TODO Update DB with new results
+    train_new_decison_tree(mail)
+
+
+def train_new_decison_tree(mail):
+    global training_data_handler
+    training_data_handler.insert_sample(mail, -2)
+
+    new_decision_tree = DecisionTree()
+    new_decision_tree.train_tree(training_data_handler.get_training_data())
+    new_decision_tree.test()
+
+    global decision_tree
+    decision_tree = new_decision_tree
