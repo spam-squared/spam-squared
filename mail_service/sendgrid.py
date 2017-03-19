@@ -3,11 +3,13 @@ import os
 from sendgrid.helpers.mail import *
 from flask import Flask, request
 import simplejson
+
 app = Flask(__name__)
 
 sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
 from_email = apikey=os.environ.get('EMAIL')
 recieverHooks = []
+
 
 @app.route('/parse', methods=['POST'])
 def sendgrid_parser():
@@ -31,8 +33,10 @@ def sendgrid_parser():
 if __name__ == '__main__':
     app.run(debug=True)
 
+
 def add_reciever(reciever):
     recieverHooks.append(reciever)
+
 
 def send(reciever, content, subject):
     to_email = Email(reciever)
