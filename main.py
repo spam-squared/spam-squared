@@ -27,7 +27,7 @@ restored = tensorflow.restore()
 
 # Set up mail service
 mail_service = MailService()
-mail_service.add_receiver(lambda data: predict_with_decision_tree(data))
+mail_service.add_receiver(lambda data: predict_and_reply(data))
 mail_service.add_receiver(lambda data: update_model(data))
 
 
@@ -49,15 +49,14 @@ def update_model(mail):
     train_new_decison_tree(mail)
 
 
+def predict_and_reply(mail):
+    global decision_tree
+    decision_tree_prediction = decision_tree.predict(mail['body'])
+
+
 # ----------------------------------------------------------------------
 # Decision tree
 # ----------------------------------------------------------------------
-
-def predict_with_decision_tree(mail):
-    global decision_tree
-    prediction = decision_tree.predict(mail['body'])
-
-
 def train_new_decison_tree(mail):
     """
     :param mail: Mail: mail_from, subject, body
