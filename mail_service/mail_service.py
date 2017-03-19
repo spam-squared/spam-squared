@@ -26,11 +26,12 @@ class MailService(object):
                 for func in self.receivers:
                     func(data)
 
-            sleep(10)
+            sleep(3)
             check_mail_loop(self)
 
-        mail_thread = Thread(target=check_mail_loop, args=(self,))
-        mail_thread.start()
+        check_mail_loop(self)
+        # mail_thread = Thread(target=check_mail_loop, args=(self,))
+        # mail_thread.start()
 
     def add_receiver(self, receiver):
         self.receivers.append(receiver)
@@ -69,9 +70,11 @@ class MailService(object):
                         print('Subject : ' + email_subject + '\n')
                         print('Body : ' + body + '\n')
 
+                        mail.store(str(i), '+FLAGS', '\\Deleted')
                         mail.expunge()
                         mail.close()
                         mail.logout()
+                        print('Removed read email')
 
                         return {
                             "mail_from": email_from,
