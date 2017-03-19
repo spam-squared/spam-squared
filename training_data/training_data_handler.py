@@ -2,16 +2,14 @@ import sqlite3
 
 
 class TrainingDataHandler(object):
-    training_data = None
-
     def init_db(self):
         """Init database"""
         conn = sqlite3.connect('training_data.db')
         c = conn.cursor()
         c.execute('''
           CREATE TABLE IF NOT EXISTS train_data (
-            id INTEGER PRIMARY KEY,
-            target TEXT NOT NULL,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            target INTEGER NOT NULL,
             data TEXT NOT NULL
           );
         ''')
@@ -25,10 +23,11 @@ class TrainingDataHandler(object):
         c = conn.cursor()
         c.execute("SELECT * FROM train_data")
 
-        self.training_data = list(map(lambda row: [row[0], row[1]], c))
+        data = list(map(lambda row: [row[0], row[1]], c))
 
         conn.commit()
         conn.close()
+        return data
 
     def insert_sample(self, data, target):
         """Insert a training sample into database"""
@@ -44,4 +43,4 @@ class TrainingDataHandler(object):
 
     def get_training_data(self):
         """Get training data"""
-        return self.training_data # Get with responses["responses"][index]["text"]
+        return self.load_db()
