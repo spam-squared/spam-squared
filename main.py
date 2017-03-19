@@ -45,7 +45,7 @@ mail_service.add_receiver(lambda data: update_model(data))
 # Data Model
 # ----------------------------------------------------------------------
 def update_model(mail):
-    # TODO Update DB with new results
+    training_data_handler.insert_sample(mail['body'], -1, mail['mail_from'])
     train_new_decison_tree(mail)
     predict_and_reply(mail)
 
@@ -65,6 +65,7 @@ def predict_and_reply(mail):
     # Send chosen response
     global mail_service
     mail_service.send_mail(mail['mail_from'], mail['subject'], responses[response_id])
+    training_data_handler.set_target(mail['mail_from'], response_id)
 
 
 # ----------------------------------------------------------------------
@@ -75,9 +76,6 @@ def train_new_decison_tree(mail):
     :param mail: Mail: mail_from, subject, body
     :return:
     """
-    global training_data_handler
-    training_data_handler.insert_sample(mail, -2)
-
     new_decision_tree = DecisionTree()
     new_decision_tree.train_tree(training_data_handler.get_training_data())
     new_decision_tree.test()
