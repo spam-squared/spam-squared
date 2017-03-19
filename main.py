@@ -62,8 +62,9 @@ def predict_and_reply(mail):
     response_handler.load_responses()
     responses = response_handler.get_responses()
 
+    # Send chosen response
     global mail_service
-    mail_service.send_mail(mail['mail_from'], responses[response_id])
+    mail_service.send_mail(mail['mail_from'], mail['subject'], responses[response_id])
 
 
 # ----------------------------------------------------------------------

@@ -89,10 +89,9 @@ class MailService(object):
         except Exception as e:
             print(str(e))
 
-    def send_mail(self, to_address, body):
+    def send_mail(self, to_address, subject, body):
         fromm = self.FROM_EMAIL
         to = [to_address]
-        subject = 'Interesting!'
 
         email_text = """\
                     From: %s
