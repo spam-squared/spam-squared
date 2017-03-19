@@ -1,3 +1,2 @@
-sendgrid
 flask
 simplejson

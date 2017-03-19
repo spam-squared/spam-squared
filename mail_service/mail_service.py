@@ -4,12 +4,34 @@ from __future__ import print_function
 import imaplib
 import smtplib
 import email
+from threading import Thread
+from time import sleep
 
 
 class MailService(object):
     SMTP_SERVER = "smtp.gmail.com"
     FROM_EMAIL = "keith.responsum@gmail.com"
     FROM_PWD = "ILoveSpam"
+
+    receivers = []
+
+    def __init__(self):
+        def check_mail_loop(self):
+            print("Checking mail...")
+            data = self.read_mail()
+
+            if data != -1:
+                for func in self.receivers:
+                    func(data['body'])
+
+            sleep(10)
+            check_mail_loop(self)
+
+        mail_thread = Thread(target=check_mail_loop, args=(self,))
+        mail_thread.start()
+
+    def add_receiver(self, receiver):
+        self.receivers.append(receiver)
 
     def read_mail(self):
         try:
@@ -25,11 +47,11 @@ class MailService(object):
             latest_email_id = int(id_list[-1])
 
             for i in range(latest_email_id, first_email_id, -1):
-                typ, data = mail.fetch(i, '(RFC822)')
+                typ, data = mail.fetch(str(i), "(RFC822)")
 
                 for response_part in data:
                     if isinstance(response_part, tuple):
-                        msg = email.message_from_string(response_part[1])
+                        msg = email.message_from_bytes(response_part[1])
                         email_subject = msg['subject']
                         email_from = msg['from']
 
@@ -40,24 +62,36 @@ class MailService(object):
                         else:
                             body = msg.get_payload()
 
+                        print('NEW EMAIL:' + '\n')
                         print('From : ' + email_from + '\n')
                         print('Subject : ' + email_subject + '\n')
                         print('Body : ' + body + '\n')
 
+                        mail.expunge()
+                        mail.close()
+                        mail.logout()
 
-                mail.store(i, '+FLAGS', '\\Deleted')
+                        return {
+                            "recipient": email_from,
+                            "subject": email_subject,
+                            "body": body
+                        }
+
+                mail.store(str(i), '+FLAGS', '\\Deleted')
                 print('Removed read email')
 
             mail.expunge()
             mail.close()
             mail.logout()
 
+            return -1
+
         except Exception as e:
             print(str(e))
 
-    def send_mail(self):
+    def send_mail(self, to_address):
         fromm = self.FROM_EMAIL
-        to = ['julianbrendl@gmail.com']
+        to = [to_address]
         subject = 'OMG Super Important Message'
         body = "TEST MESSAGE"
 
