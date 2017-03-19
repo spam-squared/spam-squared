@@ -15,6 +15,8 @@ class DecisionTree(object):
         """Train the decision tree"""
         shuffle(mails)
 
+        mails = list(map(lambda row: [row[3], row[1]], mails))
+
         self.train_data = mails[:math.floor(len(mails) * self.TRAIN_DATA_PERCENTAGE)]
         self.test_data = mails[math.floor(len(mails) * self.TRAIN_DATA_PERCENTAGE):]
 
