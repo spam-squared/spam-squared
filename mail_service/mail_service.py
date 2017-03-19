@@ -72,7 +72,7 @@ class MailService(object):
                         mail.logout()
 
                         return {
-                            "recipient": email_from,
+                            "mail_from": email_from,
                             "subject": email_subject,
                             "body": body
                         }

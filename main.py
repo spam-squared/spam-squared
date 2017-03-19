@@ -59,6 +59,10 @@ def predict_with_decision_tree(mail):
 
 
 def train_new_decison_tree(mail):
+    """
+    :param mail: Mail: mail_from, subject, body
+    :return:
+    """
     global training_data_handler
     training_data_handler.insert_sample(mail, -2)
 
