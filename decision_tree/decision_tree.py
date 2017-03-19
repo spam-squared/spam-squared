@@ -6,12 +6,19 @@ from functools import reduce
 
 
 class DecisionTree(object):
+    empty = True
     clf = None
     train_data = None
     test_data = None
     TRAIN_DATA_PERCENTAGE = 0.7
 
     def train_tree(self, mails):
+        if len(mails) == 0:
+            self.empty = True
+            return 2
+
+        self.empty = False
+
         """Train the decision tree"""
         shuffle(mails)
 
@@ -30,10 +37,17 @@ class DecisionTree(object):
         self.clf = self.clf.fit(self.train_data['data'], self.train_data['target'])
 
     def predict(self, mail_features):
+        if self.empty:
+            return 2
+
         """Predict response for mail"""
         return self.clf.predict_proba(mail_features)
 
     def test(self):
+        if self.empty:
+            print("Test Accuracy: No data")
+            return -1
+
         """Calculates test accuracy of current tree"""
         accuracy = reduce((lambda acc, mail: acc + self.predict(mail['data'])), self.test_data, 0)
         accuracy /= len(self.test_data)

@@ -1,7 +1,7 @@
 from mail_service.mail_service import MailService
 from training_data.training_data_handler import TrainingDataHandler
 from decision_tree.decision_tree import DecisionTree
-from tensorflow.model_v2 import Tensorflow
+#from tensorflow.model_v2 import Tensorflow
 from responses.response_handler import ResponseHandler
 import argparse
 
@@ -23,8 +23,8 @@ decision_tree.train_tree(training_data_handler.get_training_data())
 decision_tree.test()
 
 # Set up tensor flow
-tensorflow = Tensorflow()
-restored = tensorflow.restore()
+# tensorflow = Tensorflow()
+# restored = tensorflow.restore()
 
 # Set up mail service
 mail_service = MailService()
