@@ -2,3 +2,5 @@ flask
 simplejson
 requests
 sklearn
+pandas
+tensorflow

@@ -1,7 +1,7 @@
-import mail_parser
+from decision_tree.mail_parser import MailParser
 from sklearn import tree
 from random import shuffle
-from math import math
+import math
 from functools import reduce
 
 
@@ -20,6 +20,7 @@ class DecisionTree(object):
         self.train_data = mails[:math.floor(len(mails) * self.TRAIN_DATA_PERCENTAGE)]
         self.test_data = mails[math.floor(len(mails) * self.TRAIN_DATA_PERCENTAGE):]
 
+        mail_parser = MailParser()
         self.train_data = {
             "data": [mail_parser.parse_mail(mail.data) for mail in self.train_data],
             "target": [mail.target for mail in self.train_data]

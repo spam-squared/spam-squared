@@ -1,14 +1,12 @@
 from functools import reduce
 
-mail_dict = None
 
+class DictionaryBuilder(object):
+    mail_dict = None
 
-def build_dictionary(mails):
-    all_mails = reduce((lambda x, y: x + y), mails)
+    def build_dictionary(self, mails):
+        all_mails = reduce((lambda x, y: x + y), mails)
+        self.mail_dict = all_mails.split()
 
-    global mail_dict
-    mail_dict = all_mails.split()
-
-
-def get_dictionary():
-    return mail_dict
+    def get_dictionary(self):
+        return self.mail_dict
