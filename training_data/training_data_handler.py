@@ -31,6 +31,16 @@ class TrainingDataHandler(object):
         conn.close()
         return data
 
+    def load_without_target(self):
+        conn = sqlite3.connect('training_data.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM train_data WHERE target = -1")
+
+        data = list(map(lambda row: [row[0], row[1]], c))
+
+        conn.commit()
+        conn.close()
+        return data
 
     def set_target(self, spammer, target):
         conn = sqlite3.connect('training_data.db')
@@ -51,7 +61,7 @@ class TrainingDataHandler(object):
         conn.close()
 
     def insert_sample(self, data, target, spammer):
-        """Insert a training sample into database"""
+        """Insert a training sample into database, target -1 if not yet present"""
         conn = sqlite3.connect('training_data.db')
 
         c = conn.cursor()
