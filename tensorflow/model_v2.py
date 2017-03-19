@@ -77,15 +77,13 @@ def rnn_model(features, target):
             }, loss, train_op)
 
 
-def train(train, test):
-    transform(train)
-    transform(test)
+def train_nn(train, test):
 
-    x_train = train[0]
-    y_train = train[1]
+    x_train = map(lambda data: transform(data), train)
+    y_train = map(lambda data: data['responded'], train)
 
-    x_test = test[0]
-    y_test = test[1]
+    x_test = map(lambda data: transform(data), test)
+    y_test = map(lambda data: data['responded'], test)
 
     classifier = learn.Estimator(model_fn=rnn_model)
 
@@ -98,9 +96,16 @@ def train(train, test):
     score = metrics.accuracy_score(y_test, y_predicted)
     print('Accuracy: {0:f}'.format(score))
 
+def classify(keywords, id):
+    classifier = learn.Estimator(model_fn=rnn_model)
+    input = np.array(keywords[:].insert(0, id))
 
-def transform(frame):
-    frame[0] = frame[0].apply(lambda list: map(lambda elem: hashlib.md5("elem".encode('utf-8')).hexdigest(), list))
+    return classifier.predict(input)
+
+
+def transform(data):
+    transformed = map(lambda elem: hashlib.md5("elem".encode('utf-8')).hexdigest(), data['keywords']).insert(0, data['id'])
+    return transformed
 
 
 def save(checkpoint_file='hello.chk'):
@@ -114,6 +119,7 @@ def save(checkpoint_file='hello.chk'):
         saver = tf.train.Saver([x, y])
         saver.save(session, checkpoint_file)
 
+
 def restore(checkpoint_file='hello.chk'):
     x = tf.Variable(-1.0, validate_shape=False, name='x')
     y = tf.Variable(-1.0, validate_shape=False, name='y')
@@ -122,5 +128,8 @@ def restore(checkpoint_file='hello.chk'):
         saver.restore(session, checkpoint_file)
         print(session.run(tf.all_variables()))
 
+
 def reset():
     tf.reset_default_graph()
+
+
