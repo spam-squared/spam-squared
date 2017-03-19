@@ -17,19 +17,29 @@ class MailService(object):
 
     receivers = []
 
-    def __init__(self):
-        def check_mail_loop(self):
-            print("Checking mail...")
-            data = self.read_mail()
+    def check_mail_loop(self):
+        print("Checking mail...")
+        data = self.read_mail()
 
-            if data != -1:
-                for func in self.receivers:
-                    func(data)
+        if data != -1:
+            for func in self.receivers:
+                func(data)
 
-            sleep(3)
-            check_mail_loop(self)
+        sleep(3)
+        self.check_mail_loop()
 
-        check_mail_loop(self)
+    # def __init__(self):
+    #     def check_mail_loop(self):
+    #         print("Checking mail...")
+    #         data = self.read_mail()
+    #
+    #         if data != -1:
+    #             for func in self.receivers:
+    #                 func(data)
+    #
+    #         sleep(3)
+    #         check_mail_loop(self)
+
         # mail_thread = Thread(target=check_mail_loop, args=(self,))
         # mail_thread.start()
 
@@ -57,6 +67,10 @@ class MailService(object):
                         msg = email.message_from_bytes(response_part[1])
                         email_subject = msg['subject']
                         email_from = msg['from']
+                        # index = email_from.index('>')
+                        #
+                        # if index != -1:
+                        #     email_from = email_from[index + 1:]
 
                         body = ""
                         if msg.is_multipart():

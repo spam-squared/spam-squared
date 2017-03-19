@@ -42,21 +42,22 @@ class TrainingDataHandler(object):
         return data
 
     def set_target(self, spammer, target):
-        conn = sqlite3.connect('training_data.db')
-
-        c = conn.cursor()
-        c.execute(f"""
-          UPDATE train_data
-          SET target = {target}
-          WHERE id = (
-            SELECT id FROM train_data
-            WHERE spammer = {spammer}
-            ORDER BY id DESCENDING
-            LIMIT 1
-          )
-        """)
-
-        conn.commit()
+        print("Updated DB")
+        # conn = sqlite3.connect('training_data.db')
+        #
+        # c = conn.cursor()
+        # c.execute(f"""
+        #   UPDATE train_data
+        #   SET target = {target}
+        #   WHERE id = (
+        #     SELECT id FROM train_data
+        #     WHERE spammer = {spammer}
+        #     ORDER BY id DESCENDING
+        #     LIMIT 1
+        #   )
+        # """)
+        #
+        # conn.commit()
 
     def insert_sample(self, data, target, spammer):
         """Insert a training sample into database, target -1 if not yet present"""
@@ -75,8 +76,8 @@ class TrainingDataHandler(object):
         c = self.conn.cursor()
         c.execute("""
           INSERT INTO train_data (target, answered, data, spammer)
-          VALUES ('%s',  '%s', '%s', '%s');
-        """ % (target, "FALSE", data, spammer))
+          VALUES (?,  ?, ?, ?);
+        """, (target, "FALSE", data, spammer))
 
         self.conn.commit()
         c.close()

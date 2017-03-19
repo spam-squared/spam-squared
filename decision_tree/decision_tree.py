@@ -14,7 +14,7 @@ class DecisionTree(object):
     TRAIN_DATA_PERCENTAGE = 0.7
 
     def train_tree(self, mails):
-        if len(mails) == 0:
+        if len(mails) <= 10:
             self.empty = True
             return randint(0, 7)
 
@@ -39,7 +39,7 @@ class DecisionTree(object):
 
     def predict(self, mail_features):
         if self.empty:
-            return 2
+            return randint(0, 7)
 
         """Predict response for mail"""
         return self.clf.predict_proba(mail_features)

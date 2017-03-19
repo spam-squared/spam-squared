@@ -5,6 +5,48 @@ from decision_tree.decision_tree import DecisionTree
 from responses.response_handler import ResponseHandler
 import argparse
 
+# ----------------------------------------------------------------------
+# Data Model
+# ----------------------------------------------------------------------
+def update_model(mail):
+    training_data_handler.insert_sample(mail['body'], -1, mail['mail_from'])
+    train_new_decison_tree(mail)
+    predict_and_reply(mail)
+
+
+def predict_and_reply(mail):
+    global decision_tree
+    decision_tree_prediction = decision_tree.predict(mail['body'])
+    # tf_prediction = tensorflow.getFirstMatch(training_data_handler.load_db())
+    # Choose a response
+    response_id = decision_tree_prediction
+
+    # Load responses
+    response_handler = ResponseHandler()
+    response_handler.load_responses()
+    responses = response_handler.get_responses()
+
+    # Send chosen response
+    global mail_service
+    mail_service.send_mail(mail['mail_from'], mail['subject'], responses['responses'][response_id]['text'])
+    training_data_handler.set_target(mail['mail_from'], response_id)
+
+
+# ----------------------------------------------------------------------
+# Decision tree
+# ----------------------------------------------------------------------
+def train_new_decison_tree(mail):
+    """
+    :param mail: Mail: mail_from, subject, body
+    :return:
+    """
+    new_decision_tree = DecisionTree()
+    new_decision_tree.train_tree(training_data_handler.get_training_data())
+    new_decision_tree.test()
+
+    global decision_tree
+    decision_tree = new_decision_tree
+
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--tensorflow', dest='tensorflow', action='store_true')
 parser.add_argument('--no-tensorflow', dest='tensorflow', action='store_false')
@@ -28,6 +70,7 @@ decision_tree.test()
 # Set up mail service
 mail_service = MailService()
 mail_service.add_receiver(lambda data: update_model(data))
+mail_service.check_mail_loop()
 
 
 # if (not args.tensorflow):
@@ -39,45 +82,3 @@ mail_service.add_receiver(lambda data: update_model(data))
 #     tensorflow = Tensorflow()
 #     restored = tensorflow.restore()
 
-
-# ----------------------------------------------------------------------
-# Data Model
-# ----------------------------------------------------------------------
-def update_model(mail):
-    training_data_handler.insert_sample(mail['body'], -1, mail['mail_from'])
-    train_new_decison_tree(mail)
-    predict_and_reply(mail)
-
-
-def predict_and_reply(mail):
-    global decision_tree
-    decision_tree_prediction = decision_tree.predict(mail['body'])
-    # tf_prediction = tensorflow.getFirstMatch(training_data_handler.load_db())
-    # Choose a response
-    response_id = 0
-
-    # Load responses
-    response_handler = ResponseHandler()
-    response_handler.load_responses()
-    responses = response_handler.get_responses()
-
-    # Send chosen response
-    global mail_service
-    mail_service.send_mail(mail['mail_from'], mail['subject'], responses[response_id])
-    training_data_handler.set_target(mail['mail_from'], response_id)
-
-
-# ----------------------------------------------------------------------
-# Decision tree
-# ----------------------------------------------------------------------
-def train_new_decison_tree(mail):
-    """
-    :param mail: Mail: mail_from, subject, body
-    :return:
-    """
-    new_decision_tree = DecisionTree()
-    new_decision_tree.train_tree(training_data_handler.get_training_data())
-    new_decision_tree.test()
-
-    global decision_tree
-    decision_tree = new_decision_tree

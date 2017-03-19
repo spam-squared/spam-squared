@@ -7,7 +7,7 @@ class ResponseHandler(object):
 
     def load_responses(self):
         """Load responses from json and initialize them"""
-        with open('responses.json') as data_file:
+        with open('./responses/responses.json') as data_file:
             data = json.load(data_file)
             self.responses = data
 
