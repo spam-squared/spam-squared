@@ -23,12 +23,13 @@ import hashlib
 
 import numpy as np
 import pandas
+import math
 from sklearn import metrics
 import tensorflow as tf
 from tensorflow.contrib.layers.python.layers import encoders
 
 from random import shuffle
-from math import math
+
 
 
 class Tensorflow(object):
