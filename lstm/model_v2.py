@@ -27,7 +27,6 @@ from sklearn import metrics
 import tensorflow as tf
 from tensorflow.contrib.layers.python.layers import encoders
 
-from tensorflow.keyword import Keyword
 from random import shuffle
 from math import math
 
@@ -41,7 +40,6 @@ class Tensorflow(object):
     EMBEDDING_SIZE = 50
     n_words = 0
     batch_size = 15
-    keyword = Keyword()
 
     def rnn_model(self, features, target):
         # Create a LSTM Unit cell with hidden size of EMBEDDING_SIZE.
@@ -109,6 +107,7 @@ class Tensorflow(object):
             mapped = self.transformDB(row)
             if (self.classify(mapped['keywords'], mapped['id']) >= 0.7):
                 return row[1]
+        return 2
 
     def classify(self, keywords, id):
         classifier = self.learn.Estimator(model_fn=self.rnn_model)
