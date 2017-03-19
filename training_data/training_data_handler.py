@@ -25,7 +25,7 @@ class TrainingDataHandler(object):
         c = conn.cursor()
         c.execute("SELECT * FROM train_data")
 
-        data = list(map(lambda row: [row[0], row[1]], c))
+        data = list(c)
 
         conn.commit()
         conn.close()
@@ -36,7 +36,7 @@ class TrainingDataHandler(object):
         c = conn.cursor()
         c.execute("SELECT * FROM train_data WHERE target = -1")
 
-        data = list(map(lambda row: [row[0], row[1]], c))
+        data = list(c)
 
         conn.commit()
         conn.close()
