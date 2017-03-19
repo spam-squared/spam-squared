@@ -104,7 +104,7 @@ class PTBModel(object):
       inputs = tf.nn.dropout(inputs, config.keep_prob)
 
     # Simplified version of models/tutorials/rnn/rnn.py's rnn().
-    # This builds an unrolled LSTM for tutorial purposes only.
+    # This builds an urolled LSTM for tutorial purposes only.
     # In general, use the rnn() or state_saving_rnn() from rnn.py.
     #
     # The alternative version of the code below is:
