@@ -13,6 +13,8 @@ class MailService(object):
     FROM_EMAIL = "keith.responsum@gmail.com"
     FROM_PWD = "ILoveSpam"
 
+    FOOTER = "\n\n\n-\n\nKeith Responsum"
+
     receivers = []
 
     def __init__(self):
@@ -98,9 +100,8 @@ class MailService(object):
                     To: %s
                     Subject: %s
 
-                    %s
-                    """ % (
-            fromm, ", ".join(to), subject, body)
+%s
+                    """ % (fromm, ", ".join(to), subject, body + self.FOOTER)
 
         try:
             server = smtplib.SMTP_SSL('smtp.gmail.com', 465)

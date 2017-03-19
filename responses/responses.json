@@ -1,10 +1,10 @@
 {
   "responses": [{
     "id": 1,
-    "text": ""
+    "text": "Very nice! Where abouts are you located?"
   }, {
     "id": 2,
-    "text": ""
+    "text": "Hmmm... I like what you're saying, but can you provide me with just a little more information? Looking for specifics."
   }, {
     "id": 3,
     "text": ""
