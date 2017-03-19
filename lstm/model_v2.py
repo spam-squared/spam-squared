@@ -27,6 +27,9 @@ from sklearn import metrics
 import tensorflow as tf
 from tensorflow.contrib.layers.python.layers import encoders
 
+from random import shuffle
+from math import math
+
 
 class Tensorflow(object):
     learn = tf.contrib.learn
@@ -66,6 +69,19 @@ class Tensorflow(object):
                     'prob': tf.nn.softmax(logits)
                 }, loss, train_op)
 
+    def transformDB(self, row):
+        body = row[3]
+        keywords = self.keyword.getKeywords(body)
+        return {'keywords': keywords, 'id': row[1], 'responded': row[2]}
+
+    def train(self, data):
+        data = map(self.transformDB, filter(lambda row: row[1] != -1, data))
+        shuffle(data)
+        lenTrain = math.floor(len(data) * 0.7)
+        train = data[:lenTrain]
+        test = data[lenTrain+1, len(data)]
+        self.train_nn(train, test)
+
     # train, test = [{'keywords':[],‘id':1,'responded':True}]
     def train_nn(self, train, test):
         x_train = map(lambda data: self.transform(data), train)
@@ -84,6 +100,14 @@ class Tensorflow(object):
             ]
         score = metrics.accuracy_score(y_test, y_predicted)
         print('Accuracy: {0:f}'.format(score))
+
+    def getFirstMatch(self, data):
+        shuffle(data)
+        for row in filter(lambda row: row[1] != -1, data):
+            mapped = self.transformDB(row)
+            if (self.classify(mapped['keywords'], mapped['id']) >= 0.7):
+                return row[1]
+        return 2
 
     def classify(self, keywords, id):
         classifier = self.learn.Estimator(model_fn=self.rnn_model)

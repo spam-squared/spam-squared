@@ -12,4 +12,4 @@ class Keyword(object):
         response = requests.request("POST", self.url, data=payload, headers=headers)
 
         data = json.loads(response)
-        filter(lambda x: x['relevance'] >= 50,data['entity_list'])
+        map(lambda x: x['form'], filter(lambda x: x['relevance'] >= 50,data['entity_list']))

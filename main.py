@@ -1,7 +1,7 @@
 from mail_service.mail_service import MailService
 from training_data.training_data_handler import TrainingDataHandler
 from decision_tree.decision_tree import DecisionTree
-#from tensorflow.model_v2 import Tensorflow
+# from lstm.model_v2 import Tensorflow
 from responses.response_handler import ResponseHandler
 import argparse
 
@@ -15,7 +15,6 @@ args = parser.parse_args()
 # Set up database
 training_data_handler = TrainingDataHandler()
 training_data_handler.init_db()
-training_data_handler.load_db()
 
 # Set up decision tree
 decision_tree = DecisionTree()
@@ -53,7 +52,7 @@ def update_model(mail):
 def predict_and_reply(mail):
     global decision_tree
     decision_tree_prediction = decision_tree.predict(mail['body'])
-
+    # tf_prediction = tensorflow.getFirstMatch(training_data_handler.load_db())
     # Choose a response
     response_id = 0
 
